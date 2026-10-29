@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {IS_LINUX, IS_WINDOWS} from './constants';
+import {IS_ELECTRON, IS_LINUX, IS_WINDOWS} from './constants';
 
 /* MAIN */
 
@@ -11,7 +11,10 @@ const Signals = ['SIGHUP', 'SIGINT', 'SIGTERM'];
 
 if ( !IS_WINDOWS ) {
 
-  Signals.push ( 'SIGALRM', 'SIGABRT', 'SIGVTALRM', 'SIGXCPU', 'SIGXFSZ', 'SIGUSR2', 'SIGTRAP', 'SIGSYS', 'SIGQUIT', 'SIGIOT' );
+  Signals.push ( 'SIGALRM', 'SIGABRT', 'SIGVTALRM', 'SIGXCPU', 'SIGXFSZ', 'SIGUSR2', 'SIGSYS', 'SIGQUIT', 'SIGIOT' );
+
+  // Electron uses synchronous SIGTRAPs for fatal errors; JS cleanup cannot safely handle them.
+  if ( !IS_ELECTRON ) Signals.push ( 'SIGTRAP' );
 
 }
 
